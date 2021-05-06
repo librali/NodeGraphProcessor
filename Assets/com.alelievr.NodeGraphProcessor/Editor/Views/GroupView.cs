@@ -11,7 +11,7 @@ namespace GraphProcessor
     public class GroupView : UnityEditor.Experimental.GraphView.Group
 	{
 		public BaseGraphView	owner;
-		public Group		    group;
+		public BaseGroup		    BaseGroup;
 
         Label                   titleLabel;
         ColorField              colorField;
@@ -25,9 +25,9 @@ namespace GraphProcessor
 		
 		private static void BuildContextualMenu(ContextualMenuPopulateEvent evt) {}
 		
-		public void Initialize(BaseGraphView graphView, Group block)
+		public virtual void Initialize(BaseGraphView graphView, BaseGroup block)
 		{
-			group = block;
+			BaseGroup = block;
 			owner = graphView;
 
             title = block.title;
@@ -38,12 +38,12 @@ namespace GraphProcessor
             headerContainer.Q<TextField>().RegisterCallback<ChangeEvent<string>>(TitleChangedCallback);
             titleLabel = headerContainer.Q<Label>();
 
-            colorField = new ColorField{ value = group.color, name = "headerColorPicker" };
+            colorField = new ColorField{ value = BaseGroup.color, name = "headerColorPicker" };
             colorField.RegisterValueChangedCallback(e =>
             {
                 UpdateGroupColor(e.newValue);
             });
-            UpdateGroupColor(group.color);
+            UpdateGroupColor(BaseGroup.color);
 
             headerContainer.Add(colorField);
 
@@ -52,12 +52,12 @@ namespace GraphProcessor
 
         void InitializeInnerNodes()
         {
-            foreach (var nodeGUID in group.innerNodeGUIDs.ToList())
+            foreach (var nodeGUID in BaseGroup.innerNodeGUIDs.ToList())
             {
                 if (!owner.graph.nodesPerGUID.ContainsKey(nodeGUID))
                 {
                     Debug.LogWarning("Node GUID not found: " + nodeGUID);
-                    group.innerNodeGUIDs.Remove(nodeGUID);
+                    BaseGroup.innerNodeGUIDs.Remove(nodeGUID);
                     continue ;
                 }
                 var node = owner.graph.nodesPerGUID[nodeGUID];
@@ -77,8 +77,8 @@ namespace GraphProcessor
                 if (node == null)
                     continue;
 
-                if (!group.innerNodeGUIDs.Contains(node.nodeTarget.GUID))
-                    group.innerNodeGUIDs.Add(node.nodeTarget.GUID);
+                if (!BaseGroup.innerNodeGUIDs.Contains(node.nodeTarget.GUID))
+                    BaseGroup.innerNodeGUIDs.Add(node.nodeTarget.GUID);
             }
             base.OnElementsAdded(elements);
         }
@@ -92,7 +92,7 @@ namespace GraphProcessor
                 {
                     if (elem is BaseNodeView nodeView)
                     {
-                        group.innerNodeGUIDs.Remove(nodeView.nodeTarget.GUID);
+                        BaseGroup.innerNodeGUIDs.Remove(nodeView.nodeTarget.GUID);
                     }
                 }
             }
@@ -102,20 +102,20 @@ namespace GraphProcessor
 
         public void UpdateGroupColor(Color newColor)
         {
-            group.color = newColor;
+            BaseGroup.color = newColor;
             style.backgroundColor = newColor;
         }
 
         void TitleChangedCallback(ChangeEvent< string > e)
         {
-            group.title = e.newValue;
+            BaseGroup.title = e.newValue;
         }
 
 		public override void SetPosition(Rect newPos)
 		{
 			base.SetPosition(newPos);
 
-			group.position = newPos;
+			BaseGroup.position = newPos;
 		}
 	}
 }

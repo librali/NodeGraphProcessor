@@ -195,7 +195,7 @@ namespace GraphProcessor
 			}
 
 			foreach (GroupView groupView in elements.Where(e => e is GroupView))
-				data.copiedGroups.Add(JsonSerializer.Serialize(groupView.group));
+				data.copiedGroups.Add(JsonSerializer.Serialize(groupView.BaseGroup));
 
 			foreach (EdgeView edgeView in elements.Where(e => e is EdgeView))
 				data.copiedEdges.Add(JsonSerializer.Serialize(edgeView.serializedEdge));
@@ -249,7 +249,7 @@ namespace GraphProcessor
 
             foreach (var serializedGroup in data.copiedGroups)
             {
-                var group = JsonSerializer.Deserialize<Group>(serializedGroup);
+                var group = JsonSerializer.Deserialize<BaseGroup>(serializedGroup);
 
                 //Same than for node
                 group.OnCreated();
@@ -360,7 +360,7 @@ namespace GraphProcessor
 								UpdateNodeInspectorSelection();
 							return true;
 						case GroupView group:
-							graph.RemoveGroup(group.group);
+							graph.RemoveGroup(group.BaseGroup);
 							UpdateSerializedProperties();
 							RemoveElement(group);
 							return true;
@@ -413,7 +413,7 @@ namespace GraphProcessor
             var groupView = elem as GroupView;
 
             if (groupView != null)
-                groupView.group.size = groupView.GetPosition().size;
+                groupView.BaseGroup.size = groupView.GetPosition().size;
         }
 
 		public override List< Port > GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -467,7 +467,7 @@ namespace GraphProcessor
 			if (menuPosition == -1)
 				menuPosition = evt.menu.MenuItems().Count;
 			Vector2 position = (evt.currentTarget as VisualElement).ChangeCoordinatesTo(contentViewContainer, evt.localMousePosition);
-            evt.menu.InsertAction(menuPosition, "Create Group", (e) => AddSelectionsToGroup(AddGroup(new Group("Create Group", position))), DropdownMenuAction.AlwaysEnabled);
+            evt.menu.InsertAction(menuPosition, "Create Group", (e) => AddSelectionsToGroup(AddGroup(new BaseGroup("Create Group", position))), DropdownMenuAction.AlwaysEnabled);
 		}
 
 		/// <summary>
@@ -669,7 +669,7 @@ namespace GraphProcessor
 
 		#region Initialization
 
-		void ReloadView()
+		protected virtual void ReloadView()
 		{
 			// Force the graph to reload his data (Undo have updated the serialized properties of the graph
 			// so the one that are not serialized need to be synchronized)
@@ -715,7 +715,7 @@ namespace GraphProcessor
 			UpdateNodeInspectorSelection();
 		}
 
-		public void Initialize(BaseGraph graph)
+		public virtual void Initialize(BaseGraph graph)
 		{
 			if (this.graph != null)
 			{
@@ -989,14 +989,14 @@ namespace GraphProcessor
 			pinnedElements.Clear();
 		}
 
-        public GroupView AddGroup(Group block)
+        public GroupView AddGroup(BaseGroup block)
         {
             graph.AddGroup(block);
             block.OnCreated();
             return AddGroupView(block);
         }
 
-		public GroupView AddGroupView(Group block)
+		public GroupView AddGroupView(BaseGroup block)
 		{
 			var c = new GroupView();
 

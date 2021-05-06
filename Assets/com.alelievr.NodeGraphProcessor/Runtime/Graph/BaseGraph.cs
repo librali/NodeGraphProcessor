@@ -15,8 +15,8 @@ namespace GraphProcessor
 		public BaseNode			removedNode;
 		public BaseNode			addedNode;
 		public BaseNode			nodeChanged;
-		public Group			addedGroups;
-		public Group			removedGroups;
+		public BaseGroup			AddedBaseGroups;
+		public BaseGroup			RemovedBaseGroups;
 		public BaseStackNode	addedStackNode;
 		public BaseStackNode	removedStackNode;
 		public StickyNote		addedStickyNotes;
@@ -89,7 +89,7 @@ namespace GraphProcessor
 		/// <typeparam name="Group"></typeparam>
 		/// <returns></returns>
         [SerializeField, FormerlySerializedAs("commentBlocks")]
-        public List< Group >                     		groups = new List< Group >();
+        public List< BaseGroup >                     		groups = new List< BaseGroup >();
 
 		/// <summary>
 		/// All Stack Nodes in the graph
@@ -338,20 +338,20 @@ namespace GraphProcessor
 		/// Add a group
 		/// </summary>
 		/// <param name="block"></param>
-        public void AddGroup(Group block)
+        public void AddGroup(BaseGroup block)
         {
             groups.Add(block);
-			onGraphChanges?.Invoke(new GraphChanges{ addedGroups = block });
+			onGraphChanges?.Invoke(new GraphChanges{ AddedBaseGroups = block });
         }
 
 		/// <summary>
 		/// Removes a group
 		/// </summary>
 		/// <param name="block"></param>
-        public void RemoveGroup(Group block)
+        public void RemoveGroup(BaseGroup block)
         {
             groups.Remove(block);
-			onGraphChanges?.Invoke(new GraphChanges{ removedGroups = block });
+			onGraphChanges?.Invoke(new GraphChanges{ RemovedBaseGroups = block });
         }
 
 		/// <summary>

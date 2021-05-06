@@ -8,7 +8,7 @@ namespace GraphProcessor
 	/// Group the selected node when created
 	/// </summary>
 	[System.Serializable]
-	public class Group
+	public class BaseGroup
 	{
 		public string			title;
 		public Color			color = new Color(0, 0, 0, 0.3f);
@@ -23,14 +23,14 @@ namespace GraphProcessor
 		public List< string >	innerNodeGUIDs = new List< string >();
 
 		// For serialization loading
-        public Group() {}
+        public BaseGroup() {}
 
 		/// <summary>
 		/// Create a new group with a title and a position
 		/// </summary>
 		/// <param name="title"></param>
 		/// <param name="position"></param>
-        public Group(string title, Vector2 position)
+        public BaseGroup(string title, Vector2 position)
 		{
 			this.title = title;
             this.position.position = position;
