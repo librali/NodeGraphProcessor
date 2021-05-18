@@ -40,8 +40,8 @@ namespace GraphProcessor
 		List< ToolbarButtonData >	rightButtonDatas = new List< ToolbarButtonData >();
 		protected BaseGraphView		graphView;
 		
-		ToolbarButtonData showProcessor;
-		ToolbarButtonData showParameters;
+		protected ToolbarButtonData showProcessor;
+		protected ToolbarButtonData showParameters;
 
 		public ToolbarView(BaseGraphView graphView)
 		{

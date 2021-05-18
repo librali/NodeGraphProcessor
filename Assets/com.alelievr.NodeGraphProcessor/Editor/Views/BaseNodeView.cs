@@ -554,6 +554,12 @@ namespace GraphProcessor
 				AssetDatabase.OpenAsset(script.GetInstanceID(), 0, 0);
 		}
 
+		public void SetDebug(bool isDebugMode)
+		{
+			nodeTarget.debug = isDebugMode;
+			UpdateDebugView();
+		}
+
 		public void ToggleDebug()
 		{
 			nodeTarget.debug = !nodeTarget.debug;
@@ -563,9 +569,21 @@ namespace GraphProcessor
 		public void UpdateDebugView()
 		{
 			if (nodeTarget.debug)
-				mainContainer.Add(debugContainer);
+			{
+				if (mainContainer.Contains(debugContainer) == false)
+				{
+					mainContainer.Add(debugContainer);
+				}
+
+			}
 			else
-				mainContainer.Remove(debugContainer);
+			{
+				if (mainContainer.Contains(debugContainer))
+				{
+					mainContainer.Remove(debugContainer);					
+				}
+
+			}
 		}
 
 		public void AddMessageView(string message, Texture icon, Color color)
